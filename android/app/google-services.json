@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "206844954617",
+    "project_id": "fluttershare-c5956",
+    "storage_bucket": "fluttershare-c5956.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206844954617:android:ff2e154f3363b2fe2a1f28",
+        "android_client_info": {
+          "package_name": "com.example.instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206844954617-1qu99qggkm1b8htcvcje9rhmht2i0lhn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAd7oddSeR08_JPUFc-HJW-I3S9h0hv31U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206844954617-1qu99qggkm1b8htcvcje9rhmht2i0lhn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
