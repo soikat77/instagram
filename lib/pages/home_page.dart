@@ -17,13 +17,13 @@ class _HomePageState extends State<HomePage> {
   Scaffold buildUnAuthScreen() {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
-              Colors.teal,
-              Colors.purple,
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.secondary,
             ],
           ),
         ),
