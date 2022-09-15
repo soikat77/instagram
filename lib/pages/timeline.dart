@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instagram/widgets/header.dart';
 
 class Timeline extends StatefulWidget {
   const Timeline({super.key});
@@ -10,6 +11,11 @@ class Timeline extends StatefulWidget {
 class _TimelineState extends State<Timeline> {
   @override
   Widget build(context) {
-    return const Center(child: Text("Timeline"));
+    return Scaffold(
+      appBar: header(context, isAppTitle: true),
+      body: const Center(
+        child: Text('Timeline'),
+      ),
+    );
   }
 }
