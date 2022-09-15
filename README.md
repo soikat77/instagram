@@ -1,4 +1,5 @@
 # instagram
+<<<<<<< HEAD
 
 A new Flutter project.
 
@@ -14,3 +15,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+Instagram clone with Flutter and Firebase by Soikat Alam
+>>>>>>> e2eebedd81c62709460700a3d0347d0569b97480
