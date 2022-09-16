@@ -1,17 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:instagram/pages/create_account.dart';
 import 'package:instagram/pages/profile.dart';
 import 'package:instagram/pages/search.dart';
 import 'package:instagram/pages/upload.dart';
 import 'package:instagram/pages/timeline.dart';
-
 import 'activity_feed.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
+final userRef = FirebaseFirestore.instance.collection('users');
+final DateTime timestamp = DateTime.now();
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  // Future<void> myAsyncMethod(
+  //     BuildContext context, VoidCallback onSuccess) async {
+  //   await Future.delayed(const Duration(seconds: 1));
+  //   onSuccess.call();
+  // }
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,7 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isAuth = false; // setting not authenticated
   late PageController pageController; // Page Controler
-  int pageIndex = 0; // first page
+  int pageIndex = 0;
 
   @override
   void initState() {
@@ -42,16 +51,41 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // checking if sign in or not the setting authenticated or not
+/* ------- Checking if sign in or not the setting authenticated or not ------ */
   handleSignIn(GoogleSignInAccount? account) {
     if (account != null) {
-      // print('User signed in!: $account');
+      createUserInFirestore();
       setState(() {
         isAuth = true;
       });
     } else {
       setState(() {
         isAuth = false;
+      });
+    }
+  }
+
+/* ----------------------- Creatine User in Firestore ----------------------- */
+  createUserInFirestore() async {
+    // checking user exists or not
+    final GoogleSignInAccount? user = googleSignIn.currentUser;
+    final DocumentSnapshot doc = await userRef.doc(user!.id).get();
+
+    // if doesn't exists, take him to create user age
+    if (!doc.exists) {
+      // ignore: use_build_context_synchronously
+      final userName = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CreateAccount()));
+
+      // from user creating page, get the username and create user in Firebase
+      userRef.doc(user.id).set({
+        "id": user.id,
+        "username": userName,
+        "photoUrl": user.photoUrl,
+        "email": user.email,
+        "displayName": user.displayName,
+        "bio": "",
+        "timestamp": timestamp,
       });
     }
   }
@@ -95,8 +129,13 @@ class _HomePageState extends State<HomePage> {
         controller: pageController,
         onPageChanged: onPageChanged,
         physics: const NeverScrollableScrollPhysics(),
+        // ignore: prefer_const_literals_to_create_immutables
         children: [
           const Timeline(),
+          // GestureDetector(
+          //   onTap: logOut,
+          //   child: Center(child: Text('Log Out')),
+          // ),
           ActivityFeed(),
           Upload(),
           Search(),
