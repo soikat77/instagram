@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "206844954617",
+    "firebase_url": "https://fluttershare-c5956-default-rtdb.firebaseio.com",
     "project_id": "fluttershare-c5956",
     "storage_bucket": "fluttershare-c5956.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "206844954617-2gq81g5nf3g4ma8ropj4dkg3sk764koo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.instagram",
+            "certificate_hash": "f1e543ec75199f7f4ad3a925f9a8c4c519e91525"
+          }
+        },
         {
           "client_id": "206844954617-1qu99qggkm1b8htcvcje9rhmht2i0lhn.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +38,13 @@
             {
               "client_id": "206844954617-1qu99qggkm1b8htcvcje9rhmht2i0lhn.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "206844954617-2cj6r052808dedcn475dktcohgomdufk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.instagram"
+              }
             }
           ]
         }
