@@ -6,15 +6,15 @@ class User {
   final String email;
   final String? photoUrl;
   final String displayName;
-  final String? bio;
+  final String bio;
 
   User({
     required this.id,
     required this.userName,
     required this.email,
-    this.photoUrl,
+    required this.photoUrl,
     required this.displayName,
-    this.bio,
+    required this.bio,
   });
 
   factory User.fromDocument(DocumentSnapshot doc) {
