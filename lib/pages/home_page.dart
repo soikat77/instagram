@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:instagram/models/user.dart';
 import 'package:instagram/pages/create_account.dart';
 import 'package:instagram/pages/profile.dart';
 import 'package:instagram/pages/search.dart';
@@ -12,15 +13,10 @@ import 'activity_feed.dart';
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final userRef = FirebaseFirestore.instance.collection('users');
 final DateTime timestamp = DateTime.now();
+late User currentUser;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
-  // Future<void> myAsyncMethod(
-  //     BuildContext context, VoidCallback onSuccess) async {
-  //   await Future.delayed(const Duration(seconds: 1));
-  //   onSuccess.call();
-  // }
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -69,11 +65,10 @@ class _HomePageState extends State<HomePage> {
   createUserInFirestore() async {
     // checking user exists or not
     final GoogleSignInAccount? user = googleSignIn.currentUser;
-    final DocumentSnapshot doc = await userRef.doc(user!.id).get();
+    DocumentSnapshot doc = await userRef.doc(user!.id).get();
 
     // if doesn't exists, take him to create user age
     if (!doc.exists) {
-      // ignore: use_build_context_synchronously
       final userName = await Navigator.push(
           context, MaterialPageRoute(builder: (context) => CreateAccount()));
 
@@ -87,7 +82,11 @@ class _HomePageState extends State<HomePage> {
         "bio": "",
         "timestamp": timestamp,
       });
+      doc = await userRef.doc(user.id).get();
     }
+    currentUser = User.fromDocument(doc);
+    // print(currentUser);
+    // print(currentUser.userName);
   }
 
   // vanish the controler
@@ -131,11 +130,11 @@ class _HomePageState extends State<HomePage> {
         physics: const NeverScrollableScrollPhysics(),
         // ignore: prefer_const_literals_to_create_immutables
         children: [
-          const Timeline(),
-          // GestureDetector(
-          //   onTap: logOut,
-          //   child: Center(child: Text('Log Out')),
-          // ),
+          // const Timeline(),
+          GestureDetector(
+            onTap: logOut,
+            child: Center(child: Text('Log Out')),
+          ),
           ActivityFeed(),
           Upload(),
           Search(),
@@ -152,7 +151,7 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.notifications_active)), // Activity Feed
           BottomNavigationBarItem(
               icon: Icon(
-            Icons.photo_camera,
+            Icons.add_box_rounded,
             size: 44.0,
           )), // upload
           BottomNavigationBarItem(icon: Icon(Icons.search)), //search
