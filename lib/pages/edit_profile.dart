@@ -1,13 +1,16 @@
 import "package:flutter/material.dart";
 
 class EditProfile extends StatefulWidget {
+  const EditProfile({super.key});
+
   @override
-  _EditProfileState createState() => _EditProfileState();
+  State<EditProfile> createState() => _EditProfileState();
+  // _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
-    return Text('Edit Profile');
+    return const Text('Edit Profile');
   }
 }

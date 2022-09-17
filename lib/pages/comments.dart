@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Comments extends StatefulWidget {
+  const Comments({super.key});
+
   @override
   CommentsState createState() => CommentsState();
 }
@@ -8,13 +10,15 @@ class Comments extends StatefulWidget {
 class CommentsState extends State<Comments> {
   @override
   Widget build(BuildContext context) {
-    return Text('Comments');
+    return const Text('Comments');
   }
 }
 
 class Comment extends StatelessWidget {
+  const Comment({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Text('Comment');
+    return const Text('Comment');
   }
 }

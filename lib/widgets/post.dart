@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Post extends StatefulWidget {
+  const Post({super.key});
+
   @override
-  _PostState createState() => _PostState();
+  State<Post> createState() => _PostState();
+  // _PostState createState() => _PostState();
 }
 
 class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
-    return Text("Post");
+    return const Text("Post");
   }
 }

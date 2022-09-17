@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:instagram/widgets/header.dart';
-import 'package:instagram/widgets/progress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // catching the database collection
@@ -11,7 +10,8 @@ class Timeline extends StatefulWidget {
   const Timeline({super.key});
 
   @override
-  _TimelineState createState() => _TimelineState();
+  State<Timeline> createState() => _TimelineState();
+  // _TimelineState createState() => _TimelineState();
 }
 
 class _TimelineState extends State<Timeline> {

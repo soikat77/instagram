@@ -7,7 +7,6 @@ import 'package:instagram/pages/create_account.dart';
 import 'package:instagram/pages/profile.dart';
 import 'package:instagram/pages/search.dart';
 import 'package:instagram/pages/upload.dart';
-import 'package:instagram/pages/timeline.dart';
 import 'activity_feed.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -32,18 +31,18 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     pageController = PageController();
     // Detects when user sign in
-    googleSignIn.onCurrentUserChanged.listen(
-      (account) {
-        handleSignIn(account);
-      },
-      // hecking if there is an error to sign in
-      onError: (err) {
-        // print('Error signing in: $err');
-      },
-    );
+    googleSignIn.onCurrentUserChanged.listen((account) {
+      handleSignIn(account);
+    },
+        // hecking if there is an error to sign in
+        onError: (err) {
+      print('Error signing in: $err');
+    });
     // Reauthenticated user when app is re-oppen
     googleSignIn.signInSilently(suppressErrors: false).then((account) {
       handleSignIn(account);
+    }).catchError((err) {
+      print('Error signing in: $err');
     });
   }
 
@@ -69,8 +68,8 @@ class _HomePageState extends State<HomePage> {
 
     // if doesn't exists, take him to create user age
     if (!doc.exists) {
-      final userName = await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => CreateAccount()));
+      final userName = await Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const CreateAccount()));
 
       // from user creating page, get the username and create user in Firebase
       userRef.doc(user.id).set({
@@ -133,12 +132,12 @@ class _HomePageState extends State<HomePage> {
           // const Timeline(),
           GestureDetector(
             onTap: logOut,
-            child: Center(child: Text('Log Out')),
+            child: const Center(child: Text('Log Out')),
           ),
-          ActivityFeed(),
-          Upload(),
-          Search(),
-          Profile(),
+          const ActivityFeed(),
+          const Upload(),
+          const Search(),
+          const Profile(),
         ],
       ),
       bottomNavigationBar: CupertinoTabBar(

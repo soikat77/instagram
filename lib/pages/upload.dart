@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Upload extends StatefulWidget {
+  const Upload({super.key});
+
   @override
-  _UploadState createState() => _UploadState();
+  State<Upload> createState() => _UploadState();
+  // _UploadState createState() => _UploadState();
 }
 
 class _UploadState extends State<Upload> {
   @override
   Widget build(BuildContext context) {
-    return Text("Upload");
+    return const Text("Upload");
   }
 }
