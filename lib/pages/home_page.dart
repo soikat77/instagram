@@ -12,7 +12,7 @@ import 'activity_feed.dart';
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final userRef = FirebaseFirestore.instance.collection('users');
 final DateTime timestamp = DateTime.now();
-late User currentUser;
+User? currentUser;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
             child: const Center(child: Text('Log Out')),
           ),
           const ActivityFeed(),
-          const Upload(),
+          Upload(currentUser: currentUser),
           const Search(),
           const Profile(),
         ],
