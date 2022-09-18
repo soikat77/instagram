@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
           const ActivityFeed(),
           Upload(currentUser: currentUser),
           const Search(),
-          const Profile(),
+          Profile(profileId: currentUser?.id),
         ],
       ),
       bottomNavigationBar: CupertinoTabBar(
