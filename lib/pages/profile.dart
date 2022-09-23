@@ -8,6 +8,7 @@ import 'package:instagram/pages/edit_profile.dart';
 import 'package:instagram/pages/home_page.dart';
 import 'package:instagram/widgets/header.dart';
 import 'package:instagram/widgets/post.dart';
+import 'package:instagram/widgets/post_tile.dart';
 import 'package:instagram/widgets/progress.dart';
 
 class Profile extends StatefulWidget {
@@ -210,9 +211,26 @@ class _ProfileState extends State<Profile> {
     if (isLoading) {
       return circularProgress();
     }
-    return Column(
-      children: posts,
+    List<GridTile> gridTiles = [];
+    for (var post in posts) {
+      gridTiles.add(
+        GridTile(
+          child: PostTile(post: post),
+        ),
+      );
+    }
+    return GridView.count(
+      crossAxisCount: 3,
+      childAspectRatio: 1.0,
+      mainAxisSpacing: 1.5,
+      crossAxisSpacing: 1.5,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: gridTiles,
     );
+    // return Column(
+    //   children: posts,
+    // );
   }
 
   @override
