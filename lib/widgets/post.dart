@@ -1,9 +1,13 @@
 // import 'dart:html';
 
+import 'dart:async';
+
+import 'package:animator/animator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/models/user.dart';
+import 'package:instagram/pages/comments.dart';
 import 'package:instagram/pages/home_page.dart';
 import 'package:instagram/widgets/custom_image.dart';
 import 'package:instagram/widgets/progress.dart';
@@ -74,12 +78,15 @@ class Post extends StatefulWidget {
 }
 
 class _PostState extends State<Post> {
+  final currentUserId = currentUser?.id;
   late final String postId;
   late final String ownerID;
   late final String userName;
   late final String location;
   late final String description;
   late final String mediaUrl;
+  bool showHeart = false;
+  late bool isLiked;
   int likeCount;
   Map likes;
 
@@ -133,13 +140,64 @@ class _PostState extends State<Post> {
     );
   }
 
+  handleLike() {
+    bool isLiked = likes[currentUserId] == true;
+    if (isLiked) {
+      postRef
+          .doc(ownerID)
+          .collection('userPost')
+          .doc(postId)
+          .update({'likes.$currentUserId': false});
+
+      setState(() {
+        likeCount -= 1;
+        isLiked = false;
+        likes[currentUserId] = false;
+      });
+    } else if (!isLiked) {
+      postRef
+          .doc(ownerID)
+          .collection('userPost')
+          .doc(postId)
+          .update({'likes.$currentUserId': true});
+
+      setState(() {
+        likeCount += 1;
+        isLiked = false;
+        likes[currentUserId] = true;
+        showHeart = true;
+      });
+      Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          showHeart = false;
+        });
+      });
+    }
+  }
+
   buildPostImage() {
     return GestureDetector(
-      onDoubleTap: () => print('liked'),
+      onDoubleTap: handleLike,
       child: Stack(
         alignment: Alignment.center,
         children: [
           cachedNetworkImage(mediaUrl),
+          showHeart
+              ? Animator(
+                  duration: const Duration(milliseconds: 300),
+                  tween: Tween(begin: 0.5, end: 1.5),
+                  curve: Curves.bounceInOut,
+                  cycles: 0,
+                  builder: (context, animatorState, child) => Transform.scale(
+                    scale: 1,
+                    child: const Icon(
+                      Icons.favorite,
+                      size: 80,
+                      color: Colors.pink,
+                    ),
+                  ),
+                )
+              : const Text(''),
         ],
       ),
     );
@@ -165,9 +223,9 @@ class _PostState extends State<Post> {
               padding: EdgeInsets.only(top: 40.0, right: 20.0),
             ),
             GestureDetector(
-              onTap: () => print('like'),
-              child: const Icon(
-                Icons.favorite_border,
+              onTap: handleLike,
+              child: Icon(
+                isLiked ? Icons.favorite : Icons.favorite_border,
                 size: 20.0,
                 color: Colors.pink,
               ),
@@ -176,7 +234,12 @@ class _PostState extends State<Post> {
               padding: EdgeInsets.only(top: 40.0, right: 20.0),
             ),
             GestureDetector(
-              onTap: () => print('comment'),
+              onTap: () => showComments(
+                context,
+                postId: postId,
+                ownerID: ownerID,
+                mediaUrl: mediaUrl,
+              ),
               child: Icon(
                 Icons.chat,
                 size: 20.0,
@@ -209,6 +272,7 @@ class _PostState extends State<Post> {
 
   @override
   Widget build(BuildContext context) {
+    isLiked = (likes[currentUserId] == true);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -218,4 +282,24 @@ class _PostState extends State<Post> {
       ],
     );
   }
+}
+
+showComments(
+  BuildContext context, {
+  required String postId,
+  required String ownerID,
+  required String mediaUrl,
+}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) {
+        return Comments(
+          postId: postId,
+          postOwnerID: ownerID,
+          postMediaUrl: mediaUrl,
+        );
+      },
+    ),
+  );
 }

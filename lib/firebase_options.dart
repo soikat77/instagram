@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '206844954617',
     projectId: 'fluttershare-c5956',
     authDomain: 'fluttershare-c5956.firebaseapp.com',
+    databaseURL: 'https://fluttershare-c5956-default-rtdb.firebaseio.com',
     storageBucket: 'fluttershare-c5956.appspot.com',
     measurementId: 'G-DXWBP4N4X0',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:206844954617:android:ff2e154f3363b2fe2a1f28',
     messagingSenderId: '206844954617',
     projectId: 'fluttershare-c5956',
+    databaseURL: 'https://fluttershare-c5956-default-rtdb.firebaseio.com',
     storageBucket: 'fluttershare-c5956.appspot.com',
   );
 
@@ -66,7 +68,9 @@ class DefaultFirebaseOptions {
     appId: '1:206844954617:ios:123da48519f937892a1f28',
     messagingSenderId: '206844954617',
     projectId: 'fluttershare-c5956',
+    databaseURL: 'https://fluttershare-c5956-default-rtdb.firebaseio.com',
     storageBucket: 'fluttershare-c5956.appspot.com',
+    androidClientId: '206844954617-2gq81g5nf3g4ma8ropj4dkg3sk764koo.apps.googleusercontent.com',
     iosClientId: '206844954617-2cj6r052808dedcn475dktcohgomdufk.apps.googleusercontent.com',
     iosBundleId: 'com.example.instagram',
   );
@@ -76,7 +80,9 @@ class DefaultFirebaseOptions {
     appId: '1:206844954617:ios:123da48519f937892a1f28',
     messagingSenderId: '206844954617',
     projectId: 'fluttershare-c5956',
+    databaseURL: 'https://fluttershare-c5956-default-rtdb.firebaseio.com',
     storageBucket: 'fluttershare-c5956.appspot.com',
+    androidClientId: '206844954617-2gq81g5nf3g4ma8ropj4dkg3sk764koo.apps.googleusercontent.com',
     iosClientId: '206844954617-2cj6r052808dedcn475dktcohgomdufk.apps.googleusercontent.com',
     iosBundleId: 'com.example.instagram',
   );

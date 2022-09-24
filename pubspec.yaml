@@ -51,6 +51,7 @@ dependencies:
   flutter_svg: ^1.1.5
   geocoding: ^2.0.5
   bitsdojo_window: ^0.1.5
+  firebase_core: ^1.23.0
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/User-research.svg
+    - assets/images/Image-upload.svg
+    - assets/images/no-content.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
