@@ -1,5 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/pages/home_page.dart';
 import 'package:instagram/widgets/header.dart';
+import 'package:instagram/widgets/progress.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Comments extends StatefulWidget {
   final String postId;
@@ -35,7 +40,36 @@ class CommentsState extends State<Comments> {
 
 /* ------------------------------ Comments Area ----------------------------- */
   buildComments() {
-    return const Text('comments');
+    return StreamBuilder(
+      stream: commentsRef
+          .doc(postId)
+          .collection("comments")
+          .orderBy("timestamp", descending: false)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return circularProgress();
+        }
+        List<Comment> comments = [];
+        for (var doc in snapshot.data!.docs) {
+          comments.add(Comment.fromDocument(doc));
+        }
+        return ListView(
+          children: comments,
+        );
+      },
+    );
+  }
+
+  addComment() {
+    commentsRef.doc(postId).collection('comments').add({
+      "userName": currentUser!.userName,
+      "comment": commentController.text,
+      "timestamp": timestamp,
+      "avatarUrl": currentUser!.photoUrl,
+      "userId": currentUser!.id,
+    });
+    commentController.clear();
   }
 
   @override
@@ -53,7 +87,7 @@ class CommentsState extends State<Comments> {
                   const InputDecoration(labelText: "Write a Comment..."),
             ),
             trailing: OutlinedButton(
-              onPressed: () => print('add coomment'),
+              onPressed: addComment,
               child: const Text('Post'),
             ),
           ),
@@ -64,10 +98,44 @@ class CommentsState extends State<Comments> {
 }
 
 class Comment extends StatelessWidget {
-  const Comment({super.key});
+  final String userName;
+  final String userId;
+  final String avatarUrl;
+  final String comment;
+  final Timestamp timestamp;
+
+  const Comment(
+      {super.key,
+      required this.userName,
+      required this.userId,
+      required this.avatarUrl,
+      required this.comment,
+      required this.timestamp});
+
+  factory Comment.fromDocument(DocumentSnapshot doc) {
+    return Comment(
+      userName: doc['userName'],
+      userId: doc['userId'],
+      avatarUrl: doc['avatarUrl'],
+      comment: doc['comment'],
+      timestamp: doc['timestamp'],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Text('Comment');
+    return Column(
+      children: [
+        ListTile(
+          title: Text(comment),
+          leading: CircleAvatar(
+            backgroundColor: Colors.purple[900],
+            backgroundImage: CachedNetworkImageProvider(avatarUrl),
+          ),
+          subtitle: Text(timeago.format(timestamp.toDate())),
+        ),
+        const Divider(),
+      ],
+    );
   }
 }
