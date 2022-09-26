@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/models/user.dart';
+import 'package:instagram/pages/activity_feed.dart';
 import 'package:instagram/pages/comments.dart';
 import 'package:instagram/pages/home_page.dart';
 import 'package:instagram/widgets/custom_image.dart';
@@ -42,6 +43,8 @@ class Post extends StatefulWidget {
       likes: doc['likes'],
     );
   }
+
+  get userId => null;
 
   int getLikeCount(likes) {
     // if there is no likes, return 0
@@ -121,7 +124,7 @@ class _PostState extends State<Post> {
                   backgroundImage: CachedNetworkImageProvider(user.photoUrl!),
                 ),
           title: GestureDetector(
-            onTap: () => print('Tapped'),
+            onTap: () => showProfile(context, profileId: user.id),
             child: Text(
               user.userName,
               style: const TextStyle(
@@ -149,6 +152,8 @@ class _PostState extends State<Post> {
           .doc(postId)
           .update({'likes.$currentUserId': false});
 
+      removeLikeFromFeed();
+
       setState(() {
         likeCount -= 1;
         isLiked = false;
@@ -161,6 +166,8 @@ class _PostState extends State<Post> {
           .doc(postId)
           .update({'likes.$currentUserId': true});
 
+      addLiketoFeed();
+
       setState(() {
         likeCount += 1;
         isLiked = false;
@@ -171,6 +178,40 @@ class _PostState extends State<Post> {
         setState(() {
           showHeart = false;
         });
+      });
+    }
+  }
+
+  addLiketoFeed() {
+    // only from other user
+    bool isNotPostOwner = currentUserId != ownerID;
+
+    if (isNotPostOwner) {
+      feedRef.doc(ownerID).collection("feedItems").doc(postId).set({
+        "type": "like",
+        "userName": currentUser!.userName,
+        "userProfileImg": currentUser!.photoUrl,
+        "postId": postId,
+        "mediaUrl": mediaUrl,
+        "timestamp": timestamp,
+      });
+    }
+  }
+
+  removeLikeFromFeed() {
+    // only other user
+    bool isNotPostOwner = currentUserId != ownerID;
+
+    if (isNotPostOwner) {
+      feedRef
+          .doc(ownerID)
+          .collection("feedItems")
+          .doc(postId)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          doc.reference.delete();
+        }
       });
     }
   }

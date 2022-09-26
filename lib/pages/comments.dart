@@ -69,6 +69,21 @@ class CommentsState extends State<Comments> {
       "avatarUrl": currentUser!.photoUrl,
       "userId": currentUser!.id,
     });
+
+    // only other user
+    bool isNotPostOwner = postOwnerID != currentUser!.id;
+
+    if (isNotPostOwner) {
+      feedRef.doc(postOwnerID).collection('feedItems').add({
+        "type": "comment",
+        "commentData": commentController.text,
+        "userName": currentUser!.userName,
+        "userProfileImg": currentUser!.photoUrl,
+        "postId": postId,
+        "mediaUrl": postMediaUrl,
+        "timestamp": timestamp,
+      });
+    }
     commentController.clear();
   }
 
@@ -100,7 +115,7 @@ class CommentsState extends State<Comments> {
 class Comment extends StatelessWidget {
   final String userName;
   final String userId;
-  final String avatarUrl;
+  final String? avatarUrl;
   final String comment;
   final Timestamp timestamp;
 
@@ -128,10 +143,13 @@ class Comment extends StatelessWidget {
       children: [
         ListTile(
           title: Text(comment),
-          leading: CircleAvatar(
-            backgroundColor: Colors.purple[900],
-            backgroundImage: CachedNetworkImageProvider(avatarUrl),
-          ),
+          leading: avatarUrl == null
+              ? CircleAvatar(
+                  backgroundColor: Colors.purple[900],
+                )
+              : CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(avatarUrl!),
+                ),
           subtitle: Text(timeago.format(timestamp.toDate())),
         ),
         const Divider(),
