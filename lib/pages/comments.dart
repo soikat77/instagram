@@ -68,13 +68,14 @@ class CommentsState extends State<Comments> {
       "timestamp": timestamp,
       "avatarUrl": currentUser!.photoUrl,
       "userId": currentUser!.id,
+      "postId": postId,
     });
 
     // only other user
     bool isNotPostOwner = postOwnerID != currentUser!.id;
 
     if (isNotPostOwner) {
-      feedRef.doc(postOwnerID).collection('feedItems').add({
+      feedRef.doc(postOwnerID).collection('feedItems').doc(postId).set({
         "type": "comment",
         "commentData": commentController.text,
         "userName": currentUser!.userName,
@@ -82,6 +83,7 @@ class CommentsState extends State<Comments> {
         "postId": postId,
         "mediaUrl": postMediaUrl,
         "timestamp": timestamp,
+        "userId": currentUser!.id,
       });
     }
     commentController.clear();
@@ -118,14 +120,17 @@ class Comment extends StatelessWidget {
   final String? avatarUrl;
   final String comment;
   final Timestamp timestamp;
+  final String postId;
 
-  const Comment(
-      {super.key,
-      required this.userName,
-      required this.userId,
-      required this.avatarUrl,
-      required this.comment,
-      required this.timestamp});
+  const Comment({
+    super.key,
+    required this.userName,
+    required this.userId,
+    required this.avatarUrl,
+    required this.comment,
+    required this.timestamp,
+    required this.postId,
+  });
 
   factory Comment.fromDocument(DocumentSnapshot doc) {
     return Comment(
@@ -134,6 +139,7 @@ class Comment extends StatelessWidget {
       avatarUrl: doc['avatarUrl'],
       comment: doc['comment'],
       timestamp: doc['timestamp'],
+      postId: doc['postId'],
     );
   }
 

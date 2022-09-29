@@ -82,12 +82,12 @@ class Post extends StatefulWidget {
 
 class _PostState extends State<Post> {
   final currentUserId = currentUser?.id;
-  late final String postId;
-  late final String ownerID;
-  late final String userName;
-  late final String location;
-  late final String description;
-  late final String mediaUrl;
+  final String postId;
+  final String ownerID;
+  final String userName;
+  final String location;
+  final String description;
+  final String mediaUrl;
   bool showHeart = false;
   late bool isLiked;
   int likeCount;
@@ -194,6 +194,8 @@ class _PostState extends State<Post> {
         "postId": postId,
         "mediaUrl": mediaUrl,
         "timestamp": timestamp,
+        "userId": currentUser!.id,
+        // "commentData": null,
       });
     }
   }

@@ -24,16 +24,38 @@ class _ActivityFeedState extends State<ActivityFeed> {
     QuerySnapshot snapshot = await feedRef
         .doc(currentUser!.id)
         .collection('feedItems')
-        .orderBy('timestamps', descending: true)
+        .orderBy('timestamp', descending: true)
         .limit(50)
         .get();
 
     List<ActivityFeedItem> feedItems = [];
     for (var doc in snapshot.docs) {
       feedItems.add(ActivityFeedItem.fromDocument(doc));
-      // print(doc.data());
+      print(doc.data());
     }
     return feedItems;
+  }
+
+  buildFeed() {
+    return StreamBuilder(
+      stream: feedRef
+          .doc(currentUser!.id)
+          .collection('feedItems')
+          .orderBy('timestamp', descending: true)
+          .limit(50)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return circularProgress();
+        }
+        List<ActivityFeedItem> feedItems = [];
+        for (var doc in snapshot.data!.docs) {
+          feedItems.add(ActivityFeedItem.fromDocument(doc));
+        }
+
+        return ListView(children: feedItems);
+      },
+    );
   }
 
   @override
@@ -47,9 +69,7 @@ class _ActivityFeedState extends State<ActivityFeed> {
           if (!snapshot.hasData) {
             return circularProgress();
           }
-          return ListView(
-            children: snapshot.data as List<Widget>,
-          );
+          return buildFeed();
         },
       ),
     );
@@ -65,8 +85,8 @@ class ActivityFeedItem extends StatelessWidget {
   final String type; // like, follow, comment
   final String mediaUrl;
   final String postId;
-  final String userProfileImg;
-  final String commentData;
+  final String? userProfileImg;
+  // final String commentData;
   final Timestamp timestamp;
 
   const ActivityFeedItem({
@@ -77,11 +97,11 @@ class ActivityFeedItem extends StatelessWidget {
     required this.mediaUrl,
     required this.postId,
     required this.userProfileImg,
-    required this.commentData,
+    // required this.commentData,
     required this.timestamp,
   });
 
-  factory ActivityFeedItem.fromDocument(DocumentSnapshot doc) {
+  factory ActivityFeedItem.fromDocument(QueryDocumentSnapshot doc) {
     return ActivityFeedItem(
       userName: doc['userName'],
       userId: doc['userId'],
@@ -89,11 +109,17 @@ class ActivityFeedItem extends StatelessWidget {
       mediaUrl: doc['mediaUrl'],
       postId: doc['postId'],
       userProfileImg: doc['userProfileImg'],
-      commentData: doc['commentData'],
-      timestamp: doc['timeStamp'],
+      // commentData: doc['commentData'],
+      timestamp: doc['timestamp'],
     );
   }
 
+// showProfile(BuildContext context, {required String profileId}) {
+//   Navigator.push(
+//     context,
+//     MaterialPageRoute(builder: (context) => Profile(profileId: profileId)),
+//   );
+// }
   showPost(context) {
     Navigator.push(
       context,
@@ -134,9 +160,9 @@ class ActivityFeedItem extends StatelessWidget {
     } else if (type == 'follow') {
       activityItemText = 'started following you.';
     } else if (type == 'comment') {
-      activityItemText = 'comment your post.';
+      activityItemText = 'comment your post';
     } else {
-      activityItemText = 'Error: Unknown Type!';
+      activityItemText = 'Error: Unknown Type! $type';
     }
   }
 
@@ -169,10 +195,14 @@ class ActivityFeedItem extends StatelessWidget {
                   ]),
             ),
           ),
-          leading: CircleAvatar(
-            backgroundColor: Colors.purple[900],
-            backgroundImage: CachedNetworkImageProvider(userProfileImg),
-          ),
+          leading: userProfileImg == null
+              ? CircleAvatar(
+                  backgroundColor: Colors.purple[900],
+                )
+              : CircleAvatar(
+                  backgroundColor: Colors.purple[900],
+                  backgroundImage: CachedNetworkImageProvider(userProfileImg!),
+                ),
           subtitle: Text(
             timeago.format(timestamp.toDate()),
             overflow: TextOverflow.ellipsis,
@@ -185,6 +215,7 @@ class ActivityFeedItem extends StatelessWidget {
 }
 
 showProfile(BuildContext context, {required String profileId}) {
+  print(profileId);
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => Profile(profileId: profileId)),
